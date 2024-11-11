@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Free Rooms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        #results li {
+            background-color: #e0f7fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            color: #00695c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Check Free Rooms</h2>
+<form id="freeRoomsForm" action="/check_free_rooms" method="POST">
+    <label for="day">Day of the Week:</label>
+    <select id="day" name="day" required>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+    </select>
+
+    <label for="time">Time:</label>
+    <select id="time" name="time" required>
+        <option value="8:00">8:00 AM</option>
+        <option value="9:30">9:30 AM</option>
+        <option value="11:00">11:00 AM</option>
+        <option value="12:30">12:30 PM</option>
+        <option value="2:00">2:00 PM</option>
+        <option value="3:30">3:30 PM</option>
+        <option value="5:00">5:00 PM</option>
+    </select>
+
+    <label for="floor">Floor:</label>
+    <select id="floor" name="floor">
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+    </select>
+
+    <label for="room_type">Room Type:</label>
+    <select id="room_type" name="room_type">
+        <option value="">Any</option>
+        <option value="Classroom">Classroom</option>
+        <option value="Lab">Lab</option>
+    </select>
+
+    <button type="submit">Check Free Rooms</button>
+</form>
+
+<h3>Results</h3>
+<div id="results">Free Rooms will be displayed here.</div>
+
+<script>
+document.getElementById('freeRoomsForm').onsubmit = async function(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const response = await fetch('/check_free_rooms', {
+        method: 'POST',
+        body: formData
+    });
+    const result = await response.json();
+    const resultsDiv = document.getElementById('results');
+    resultsDiv.innerHTML = '<ul>' + result.free_rooms.map(room => `<li>${room}</li>`).join('') + '</ul>';
+};
+</script>
+
+</body>
+</html>
